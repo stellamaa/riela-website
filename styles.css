@@ -1,0 +1,176 @@
+/* Global reset and base */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: "Helvetica Neue";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: url(bg.jpeg);
+    background-size: cover;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Fullscreen site wrapper */
+.site {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* WebGL canvas container - sits below overlay content */
+/* .gl-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+} */
+
+/* Overlay on top of canvas */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 28px;
+  z-index: 2;
+  pointer-events: none; /* allow clicks to pass to buttons only where pointer-events restored */
+}
+
+/* top row */
+.top-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+  pointer-events: auto;
+}
+.logo {
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  font-size: 2.5rem;
+  z-index: 0;
+}
+
+/* center text area (desktop: pushed to right) */
+.center-text {
+  max-width: 420px;
+  margin-left: auto; /* push to right */
+  text-align: left;
+  pointer-events: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-right: 6vw;
+}
+.center-text .definition {
+  opacity: 0.95;
+  margin-bottom: 14px;
+}
+.center-text .phonetic {
+  font-style: normal;
+  opacity: 0.9;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.center-text .lead {
+  margin-top: 8px;
+  margin-bottom: 14px;
+  opacity: 0.95;
+}
+.book {
+  display: inline-block;
+  pointer-events: auto;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+canvas {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  position: fixed;
+  background-color: none;
+  z-index: 1;
+  overflow: hidden; 
+} 
+/* footer / circuit - placed near bottom-right on desktop */
+.footer {
+  pointer-events: auto;
+}
+.circuit {
+  margin-bottom: 40px;
+  margin-left: auto;
+  max-width: 260px;
+
+}
+.circuit-title {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.circuit ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: 0.95;
+}
+.circuit li {
+  margin-bottom: 4px;
+}
+
+/* contact bottom-left */
+.contact {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  font-size: 12px;
+  pointer-events: auto;
+}
+
+
+/* mobile responsive */
+@media (max-width: 780px) {
+  .overlay {
+    padding: 18px;
+  }
+
+  .center-text {
+    margin: 10vh 18px 0 18px;
+    max-width: 360px;
+    text-align: left;
+    font-size: 13px;
+    padding-right: 0;
+  }
+  .logo {
+    font-size: 2rem;
+  }
+  .circuit {
+    margin: 28px 18px 25px 18px;
+    max-width: 320px;
+    padding-right: 0;
+  }
+  .contact {
+    position: absolute;
+  left: 460px;
+  bottom: 20px;
+  }
+}
