@@ -1,0 +1,205 @@
+/* Momence Booking Popup Styles - Vanilla JS Version */
+
+/* Demo page styles (remove these when integrating) */
+.demo-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.demo-container h1 {
+  color: #374151;
+  margin-bottom: 20px;
+}
+
+.demo-container p {
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+/* Booking button styles (customize these to match your site) */
+.booking-btn {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.booking-btn:hover {
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+/* Popup overlay */
+.momence-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.momence-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Popup container */
+.momence-popup-container {
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  height: 90%;
+  max-height: 800px;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.momence-popup-overlay.active .momence-popup-container {
+  transform: scale(1) translateY(0);
+}
+
+/* Popup header */
+.momence-popup-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.momence-popup-close {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  font-family: inherit;
+}
+
+.momence-popup-close:hover {
+  color: #374151;
+}
+
+.momence-popup-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+/* Popup content */
+.momence-popup-content {
+  flex: 1;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Iframe container */
+.momence-iframe-container {
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.momence-booking-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Loading state */
+.momence-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #6b7280;
+  font-family: inherit;
+}
+
+.momence-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #6b7280;
+  border-radius: 50%;
+  animation: momence-spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes momence-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .momence-popup-container {
+    width: 95%;
+    height: 95%;
+    border-radius: 8px;
+  }
+
+  .momence-popup-header {
+    padding: 16px 20px;
+  }
+
+  .momence-popup-title {
+    font-size: 16px;
+  }
+
+  .momence-popup-close {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+.momence-popup-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.momence-popup-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.momence-popup-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.momence-popup-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

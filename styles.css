@@ -5,7 +5,6 @@
 html,
 body {
   height: 100vh;
-  margin: 0;
   color: #ffffffd7;
   font-family: "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -14,7 +13,9 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   padding: 5px;
+  margin: 10px
   overflow: hidden;
+  cursor: none;
 }
 
 .gl {
@@ -24,6 +25,8 @@ body {
   width: 100%;
   height: 100%;
   z-index: 1;
+  opacity: 1;
+
 }
 canvas {
   position: fixed;
@@ -32,16 +35,21 @@ canvas {
   width: 100%;
   height: 100%;
   z-index: 0;
+  opacity: 0.6;
+
 }
 a, .contact a {
   color: inherit;
   text-decoration: none;
   z-index: 10;
 }
+
 a:hover {
   opacity: 0.8;
 }
-
+.overlay {
+  opacity: 1;
+}
 /* Overlay main wrapper */
 /* .overlay {
   position: relative;
@@ -60,19 +68,22 @@ a:hover {
   align-items: start;
 }
 .logo {
-  margin: 0;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  font-size: 2.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 4vh;
 }
+
+
 .icon {
-  width: 220px;
-  height: 140px;
+  width: 320px;
+  height: 240px;
  display: flex;
   align-items: center;
   filter: invert(1);
-  margin-top: -3rem;
-  margin-right: -5rem;
+  margin-top: -6rem;
+  margin-right: -8rem;
 }
 
 /* Main content */
@@ -81,8 +92,8 @@ a:hover {
   display: flex;
   justify-content: end;
   align-items: start;
-  padding-right: 4rem;
- margin-top: -6rem; 
+  padding-right: 7rem;
+ margin-top: -9.5rem; 
   gap: 4rem;
 }
 
@@ -90,12 +101,13 @@ a:hover {
   display: flex;
   flex-direction: column;
   max-width: 450px;
-  gap: 17vh;
+  gap: 18vh;
   font-size: 0.8rem;
-  line-height: 1.5;
+  line-height: 1.2;
 }
 .center-text .definition {
   opacity: 0.95;
+  width: 500px;
 }
 .center-text .phonetic {
   font-style: normal;
@@ -109,6 +121,7 @@ a:hover {
   margin: 0.5rem 0;
   opacity: 0.95;
   font-size: 1rem;
+  width: 550px;
 
 }
 .book1 {
@@ -124,26 +137,30 @@ a:hover {
 
 /* Circuit section */
 .circuit {
-  margin-top: auto;
+  position: relative;
   max-width: 260px;
 
 }
 .circuit-title {
+  position: relative;
   font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
-  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 15px;
+  font-weight: 400;
+  
 }
 .circuit ul {
   list-style: none;
   margin: 0;
   padding: 0;
   font-size: 0.8rem;
-  line-height: 1.3;
+  line-height: 1;
   opacity: 0.95;
+
 }
 .circuit li {
   margin-bottom: 4px;
+
 }
 .footer {
   width: 100%;
@@ -184,11 +201,18 @@ p {
     font-size: 0.8rem;
   }
 }
+
+
 /* Mobile responsive */
 @media (max-width: 600px) {
 
+  .gl {
+    z-index: 1;
+  }
+
   body {
     overflow: hidden;
+    margin: 0;
   }
   .overlay {
     padding: 0rem;
@@ -196,22 +220,31 @@ p {
 
  .definition p {
     font-size: 0.9rem;
+    
  }
+.definition {
+    max-width: 90vw; 
+  }
+
   .container {
     max-height: 100vh;
+    
   display: flex;
   align-items: start;
-  padding-left: 0px;
+  margin: auto;
+  position: fixed;
  margin-top: 0rem; 
  
   }
   .center-text {
-    max-width: 100vw;
+    max-width: 90vw; 
     max-height: 100vh;
     font-size: 0.9rem;
     display: flex;
     flex-direction: column;
     align-items: start;
+    justify-content: start;
+    gap: 5rem;
    
   }
   .logo {
@@ -219,7 +252,12 @@ p {
   }
 .lead p {
     font-size: 0.9rem;
-    margin-top: 60%;
+    margin-top: 40%;
+    max-width: 90vw;
+  }
+
+  p {
+    font-size: 0.9rem;
   }
   .circuit {
     display: flex;
@@ -236,17 +274,7 @@ p {
   .circuit ul, .circuit-title {
     font-size: 0.8rem;
   }
- 
-  .book1 {
-    display: flex;
-    margin-left: auto;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-  }
-  .book2 {
-    display: none;
 
-  }
   .icon {
     display: none;
   }
@@ -265,8 +293,36 @@ p {
 
 }
 
+@media (max-width: 800px) {
+
+
+
+}
+
 @media (orientation: landscape) {
   body {
     flex-direction: row;
+  }
+}
+
+@media (max-width: 400px) {
+
+ p {
+    font-size: 0.8rem;
+ }
+  .lead {
+    position: fixed;
+    bottom: 22%;
+      
+
+  }
+
+  .lead p {
+    font-size: 0.8rem;
+    margin-top: 0;
+  }
+
+  .circuit {
+font-size: 0.7rem;
   }
 }
