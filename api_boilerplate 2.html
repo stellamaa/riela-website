@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+
+    <style type="text/css">
+        .events {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>This is a Heading</h1>
+    <p>This is a paragraph.</p>
+    <div class="events" id="my-events"></div>
+
+    <script>
+        (async () => {
+            // define your endpoint params
+            const hostId = 1 // change to your id
+            const token = "YOUR_TOKEN" // change to your token
+
+            // call the endpoint
+            const endpoint = `https://api.withribbon.com/api/v1/Events?hostId=${hostId}&token=${token}`;
+            const response = await fetch(endpoint);
+
+            // parse data from the endpoint
+            const events = await response.json();
+
+            // iterate over and display the data
+            events.forEach(event => {
+                const { title } = event
+                return document.getElementById("my-events").innerHTML += `<div>${title}</div>` // add your HTML design
+            })
+        })()
+    </script>
+
+</body>
+
+</html>

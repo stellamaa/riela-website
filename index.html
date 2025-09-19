@@ -1,94 +1,155 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>RIELA</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" href="/assets/favicon1.png" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Riela contemporary bath houses — a modern space for an ancient ritual."
+    />
+    <meta
+      name="keywords"
+      content="Riela, contemporary bath houses, modern space, ancient ritual, Roman thermae, Japanese onsen, Russian banya"
+    />
+    <meta name="author" content="Riela" />
+    <meta property="og:title" content="Riela - A Modern Space for an Ancient Ritual" />
+    <meta
+      property="og:description"
+      content="Inspired by Roman thermae, Japanese onsen, and Russian banya — reimagined for today's need to restore body and mind."
+    />
+    <meta property="og:image" content="/assets/og-image.jpg" />
+    <meta property="og:url" content="https://rielaspaces.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@RielaSpaces" />
+    <meta name="twitter:title" content="Riela - A Modern Space for an Ancient Ritual" />
+    <meta name="twitter:description" content="Reimagined for today's need to restore body and mind." />
+    <meta name="twitter:image" content="/assets/og-image.jpg" />
 
-  <!-- jQuery first -->
-  <script src="jquery-3.2.1.min.js"></script>
-  <!-- jQuery Ripples plugin -->
-  <script src="jquery.ripples.js"></script>
+    <title>RIELA</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="/assets/favicon1.png" />
 
-  <!-- other libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
-<body>
-  <main>
-    <!-- ripple background will apply to the body -->
-    <div id="gl" class="gl-canvas" aria-hidden="true"></div>
+    <!-- jQuery first -->
+    <script src="jquery-3.2.1.min.js"></script>
+    <!-- jQuery Ripples plugin -->
+    <script src="jquery.ripples.js"></script>
 
-    <div class="overlay">
-      <header class="top-row">
-        <img class="logo" src="/assets/riela-logo.png" alt="RIELA Logo">
-        <a href="https://momence.com/" target="_blank" class="book1">BOOK</a>
-        <img src="/assets/RIELA ICON.png" alt="riela icon" class="icon" />
-      </header>
+    <!-- other libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <main>
+      <!-- ripple background will apply to the body -->
+      <div id="gl" class="gl-canvas" aria-hidden="true"></div>
 
-      <div class="container">
-        <div class="center-text" role="region" aria-label="Introduction">
+      <div class="overlay">
+        <header class="top-row">
+        <img src="./assets/riela-logo.png" alt="Riela Logo">
+          <a href="https://momence.com/" target="_blank" class="book1">BOOK</a>
+        </header>
+
+        <!-- Toggle Button -->
+        <div class="toggle-btn" id="toggleBtn">+</div>
+
+        <!-- Hidden/Expandable Info -->
+        <div class="info-panel" id="infoPanel">
           <p class="definition">
-            <strong>Riela</strong> <span class="phonetic">[ree-EH-lah]</span> — from Spanish <em>rielar</em>, verb meaning "to shimmer" or "gleam faintly,"
-            derived from Latin <em>regillare</em> (uncertain origin); <br> used poetically in Spanish.
+            <strong>Riela</strong>
+            <span class="phonetic">[ree-EH-lah]</span> — from Spanish
+            <em>rielar</em>, <br class="mobile"> verb meaning "to shimmer" or <br class="desktop"> "gleam faintly,"
+            derived from Latin <br class="mobile"><em>regillare</em> (uncertain origin); 
+            used <br class="mobile"> poetically in Spanish.
           </p>
-          <a href="https://momence.com/" target="_blank" class="book2">BOOK</a>
+
           <div class="lead">
-            <p>A modern space for an ancient ritual. <br><br>Inspired by Roman thermae, Japanese onsen, and Russian banya — reimagined for today's need to restore body and mind.</p>
+            <p>
+             <div class="modern"> <p> A modern space for an ancient ritual. </p> </div> Inspired by
+              Roman thermae, Japanese <br class="mobile"> onsen, and Russian banya — reimagined <br class="mobile">
+              for <br class="desktop"> today's need to restore body <br class="mobile"> and mind.
+            </p>
           </div>
+
           <div class="circuit">
             <div class="circuit-title">CIRCUIT</div>
             <ul>
               <li>90 °C dry sauna</li>
               <li>50 °C hammam</li>
               <li>40 °C mineral hot pool</li>
-              <li>14 °C &amp; 8 °C cold plunges</li>
+              <li>4 °C &amp; 8 °C cold plunges</li>
               <li>Heated granite stone</li>
             </ul>
           </div>
         </div>
-      </div>
 
-      <div class="footer"> 
-        <a class="contact" href="mailto:info@riela.com">Contact</a>
+        <!-- Bottom left logo -->
+        <div class="footer">
+          <img src="/assets/favicon.png" alt="riela icon" />
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-<script>
-  $(function () {
-    function getBackgroundImage() {
-      const hour = new Date().getHours();
-      // Between 5 PM (17) and 7 AM (7) use b2.jpg
-      if (hour >= 22 || hour < 7) {
-        return "/assets/B1.jpg";
-      } else {
-        return "/assets/B2.jpg";
+    <!-- Background script -->
+    <script>
+      $(function () {
+        function getBackgroundImage() {
+          const hour = new Date().getHours();
+          if (hour >= 18 || hour < 7) {
+            return "/assets/background.jpg";
+          } else {
+            return "/assets/background.jpg";
+          }
+        }
+
+        const $body = $("body");
+        $body.ripples({
+          resolution: 312,
+          dropRadius: 40,
+          perturbance: 0.04,
+          interactive: true,
+          imageUrl: getBackgroundImage(),
+        });
+
+        function updateBackground() {
+          const currentImage = getBackgroundImage();
+          $body.ripples("set", "imageUrl", currentImage);
+        }
+
+        setInterval(updateBackground, 5 * 60 * 1000);
+      });
+
+      // Toggle Button Functionality
+      const toggleBtn = document.getElementById("toggleBtn");
+      const infoPanel = document.getElementById("infoPanel");
+
+      toggleBtn.addEventListener("click", () => {
+        if (infoPanel.style.display === "flex") {
+          infoPanel.style.display = "none";
+          toggleBtn.textContent = "+";
+        } else {
+          infoPanel.style.display = "flex";
+          toggleBtn.textContent = "−";
+        }
+      });
+    </script>
+
+    <!-- Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HealthClub",
+        "name": "Riela",
+        "url": "https://rielaspaces.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Apodaca 20",
+          "addressLocality": "Madrid",
+          "addressRegion": "Madrid",
+          "postalCode": "28003",
+          "addressCountry": "Spain"
+        },
+        "sameAs": ["https://www.instagram.com/rielaspaces"]
       }
-    }
-
-    // Initialize ripples with correct background
-    const $body = $('body');
-    $body.ripples({
-      resolution: 1024,
-      dropRadius: 20,
-      perturbance: 0.05,
-      interactive: true,
-      imageUrl: getBackgroundImage()
-    });
-
-    // Function to update background image
-    function updateBackground() {
-      const currentImage = getBackgroundImage();
-      $body.ripples('set', 'imageUrl', currentImage);
-    }
-
-    // Check every 5 minutes
-    setInterval(updateBackground, 5 * 60 * 1000);
-  });
-</script>
-
-</body>
+    </script>
+  </body>
 </html>

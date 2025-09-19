@@ -1,9 +1,7 @@
-/* Global reset and base */
+/* Reset */
 * {
   box-sizing: border-box;
 }
-
-
 
 body, html {
   margin: 0;
@@ -12,16 +10,10 @@ body, html {
   width: 100vw;
   color: #ffffffd7;
   font-family: "Helvetica Neue";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* background-image: url("/assets/bluegradient.jpg"); */
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
-  cursor: none;
 }
-
-
 
 .gl {
   position: absolute;
@@ -31,9 +23,9 @@ body, html {
   height: 100%;
   z-index: 1;
   opacity: 1;
+}
 
-} 
- canvas {
+canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -41,299 +33,171 @@ body, html {
   height: 100vh;
   z-index: 1;
   opacity: 1;
+}
+.mobile {
+  display: none;
+}
+.modern {
+  padding-bottom: 0px;
+}
 
-}  
-a, .contact a {
+.desktop {
+  display: inline;
+}
+a {
   color: inherit;
   text-decoration: none;
   z-index: 10;
 }
-
 a:hover {
   opacity: 0.8;
 }
-/* .overlay {
-  opacity: 1;
-} */
-/* Overlay main wrapper */
-/* .overlay {
-  position: relative;
-  min-height: 100vh;
-  max-width: 100vw;
-  justify-content: space-between;
-  position: relative;
-  z-index: 3;
-  pointer-events: auto; */
 
-
-/* Header (top row) */
+/* Header */
 .top-row {
   margin-top: 2vh;
   margin-left: 5px;
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: end;
 }
-.logo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.top-row img {
   height: 4vh;
-  z-index: 10;
-}
-
-
-.icon {
-  width: 320px;
-  height: 240px;
- display: flex;
-  align-items: center;
-  filter: invert(1);
-  margin-top: -6rem;
-  margin-right: -8rem;
-}
-
-/* Main content */
-.container {
-  max-height: 96vh;
-  display: flex;
-  justify-content: end;
-  align-items: start;
-  padding-right: 7rem;
- margin-top: -9.5rem; 
-  gap: 4rem;
-}
-
-.center-text {
-  display: flex;
-  flex-direction: column;
-  max-width: 450px;
-  gap: 18vh;
-  font-size: 0.8rem;
-  line-height: 1.2;
-}
-.center-text .definition {
-  opacity: 0.95;
-  width: 500px;
-}
-.center-text .phonetic {
-  font-style: normal;
-  opacity: 0.9;
-  margin-left: 8px;
-  font-weight: 400;
-    font-size: 0.8rem;
-
-}
-.center-text .lead {
-  margin: 0.5rem 0;
-  opacity: 0.95;
-  font-size: 1rem;
-  width: 550px;
-
 }
 .book1 {
+  padding-right: 20px;
+  font-weight: light;
+}
+
+/* === FOOTER LOGO BOTTOM LEFT === */
+.footer {
+
+  pointer-events: auto;
+}
+.footer img {
+    position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  height: 6vh;
+  filter: invert(1);
+}
+
+/* === TOGGLE BUTTON BOTTOM RIGHT === */
+.toggle-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 2.5rem;
+  font-weight: lighter;
+  color: #fff;
+  cursor: pointer;
+  z-index: 20;
+  pointer-events: auto;
+  transition: transform 0.3s ease;
+}
+.toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* === INFO PANEL === */
+.info-panel {
+  position: absolute;
+  bottom: 2rem;
+  right: 3rem;
   display: none;
-}
-.book2 {
-  display: inline-flex;
-  text-transform: uppercase;
-  margin: 2rem 0;
-    font-size: 0.8rem;
-
+  flex-direction: column;
+  max-width: 600px;
+  font-size: 0.9rem;
+  pointer-events: auto;
+  z-index: 19;
 }
 
-/* Circuit section */
-.circuit {
-  position: relative;
-  max-width: 260px;
-
+.definition {
+  margin-bottom: 1rem;
 }
+
+.modern p {
+  margin-bottom: 0rem;
+}
+
 .circuit-title {
-  position: relative;
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-  margin-bottom: 15px;
-  font-weight: 400;
-  
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
+
 .circuit ul {
   list-style: none;
-  margin: 0;
   padding: 0;
-  font-size: 0.8rem;
-  line-height: 1;
-  opacity: 0.95;
-
+  margin: 0;
 }
+
 .circuit li {
   margin-bottom: 4px;
-
-}
-.footer {
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: end;
-  flex-direction: column;
-  align-items: start;
-
-}
-/* Footer contact */
-.contact {
-  
-  position: relative;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  margin-left: 1vw;
 }
 
-p {
-  font-size: 0.9rem;
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+
+  .mobile {
+    display: inline;
+  }
+.desktop {
+  display: none;
 }
-@media (max-width: 1000px) {
-  .container {
-    padding-right: 2rem;
-    gap: 4rem;
+  .modern p{
+    margin-bottom: 0px;
   }
-  .center-text, p {
-    max-width: 450px;
-    font-size: 0.8rem;
-    gap: 10rem;
-  }
-  .logo {
-    font-size: 2rem;
-  }
-  .circuit {
-    max-width: 200px;
-  }
-  .circuit ul, .circuit-title {
-    font-size: 0.8rem;
-  }
-}
-
-
-/* Mobile responsive */
-@media (max-width: 600px) {
-
-  .gl {
-    z-index: 1;
+  .top-row img {
+    height: 5.5vh;
+    padding-left: 0.5rem;
   }
 
-  body {
-    overflow: hidden;
-    margin: 0;
-  }
-  .overlay {
-    padding: 0rem;
-  }
+  .lead ,  .circuit-title  {
 
- .definition p {
-    font-size: 0.9rem;
-    
- }
-.definition {
-    max-width: 90vw; 
-  }
-
-  .container {
-    max-height: 100vh;
-    
-  display: flex;
-  align-items: start;
-  margin: auto;
-  position: fixed;
- margin-top: 0rem; 
- margin-left: 2%;
- 
-  }
-  .center-text {
-    max-width: 90vw; 
-    max-height: 100vh;
-    font-size: 0.9rem;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: start;
-    gap: 5rem;
-   
-  }
-  .logo {
-    font-size: 2rem;
-  }
-.lead p {
-    font-size: 0.9rem;
-    margin-top: 40%;
-    max-width: 90vw;
-  }
-
-  p {
-    font-size: 0.9rem;
-  }
-  .circuit {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-items: end;
-    position: fixed;
-    bottom: 1.5%;
+    padding-bottom: 2vh;
 
   }
 
-
-
-  .circuit ul, .circuit-title {
-    font-size: 0.8rem;
-  }
-
-  .icon {
-    display: none;
+  .definition {
+    margin-bottom: 1.5rem;
   }
 
 
-
-
-  .contact {
-    position: fixed;
-    bottom: 1.5%;
-    right: 10px;
-    align-self: flex-end;
-    justify-content: end;
-    font-size: 0.8rem;
+  .info-panel {
+    padding: 1vh;
+    line-height: 1.6rem;
+    max-width: 95vw;
+    font-size: 1.3rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    bottom: 4.2rem;
   }
 
-}
-
-@media (max-width: 800px) {
-
-
-
-}
-
-@media (orientation: landscape) {
-  body {
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 400px) {
-
- p {
-    font-size: 0.8rem;
- }
-  .lead {
-    position: fixed;
-    bottom: 22%;
-      
-
+  .footer img {
+    height: 6.5vh;
   }
 
-  .lead p {
-    font-size: 0.8rem;
-    margin-top: 0;
+  .toggle-btn {
+    font-size: 3.8rem;
+    bottom: 0.5rem;
+    right: 1rem;
+  }
+
+  .book1 {
+    margin-bottom:1vh;
+    font-weight: 400;
+    font-size: 1.2rem;
   }
 
   .circuit {
-font-size: 0.7rem;
+    line-height: 1.5rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .info-panel {
+    max-height: 60vh;
+    overflow-y: auto;
   }
 }

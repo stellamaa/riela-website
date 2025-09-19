@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<!--divinectorweb.com-->
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery Water Ripple Effect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <section>
+        <header>
+            <h1>JQuery Water Ripple Effect</h1>
+            <h2>A Nice JQuery Plugin for your Website</h2>
+        </header>
+    </section>
+
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/jquery.ripples.js"></script>
+
+    <script>
+        $('body').ripples({
+            resolution: 512,
+            dropRadius: 20,
+            perturbance: 0.04
+        });
+    </script>
+</body>
+</html>
