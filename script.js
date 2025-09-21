@@ -2,61 +2,56 @@
 // RIPPLES BACKGROUND
 // ======================
 $(document).ready(function () {
-  const pixelRatio = window.devicePixelRatio || 1;
   const isMobile = window.innerWidth < 768;
 
-  const $body = $("body");
-  $body.ripples({
-    resolution: isMobile ? 256 * pixelRatio : 512 * pixelRatio,
-    dropRadius: isMobile ? 20 : 35,
-    perturbance: 0.05, // subtle distortion
-  });
+  if (!isMobile) {
+    const $body = $("body");
+    $body.ripples({
+      resolution: 423,   // fixed resolution
+      dropRadius: 35,    // ripple size
+      perturbance: 0.05, // subtle distortion
+    });
 
-  const ripplesInstance = $body.data("ripples");
+    const ripplesInstance = $body.data("ripples");
 
-  if (ripplesInstance) {
-    // 🌊 Add some starter ripples so it's not static at load
-    const w = $body.innerWidth();
-    const h = $body.innerHeight();
-    for (let i = 0; i < 5; i++) {
-      ripplesInstance.drop(
-        Math.random() * w,
-        Math.random() * h,
-        isMobile ? 30 : 60,
-        isMobile ? 0.007 : 0.007
-      );
-    }
-
-    // Continuous soft wave motion
-    const cols = isMobile ? 4 : 6;
-    const rows = isMobile ? 4 : 6;
-    let t = 0;
-
-    setInterval(() => {
-      t += isMobile ? 0.0002 : 0.0003; // slower, smoother
-
+    if (ripplesInstance) {
+      // 🌊 Add some starter ripples so it's not static at load
       const w = $body.innerWidth();
       const h = $body.innerHeight();
-
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          const x = (i + 0.5) * w / cols + Math.sin(t + i) * 8;
-          const y = (j + 0.5) * h / rows + Math.cos(t + j) * 6;
-
-          const radius = isMobile
-            ? 25 + Math.sin(t + i + j) * 2
-            : 45 + Math.sin(t + i + j) * 3;
-
-          const strength = isMobile
-            ? 0.00001 + 0.00001 * Math.cos(t + i + j)
-            : 0.000010 + 0.000010 * Math.cos(t + i + j);
-
-          ripplesInstance.drop(x, y, radius, strength);
-        }
+      for (let i = 0; i < 5; i++) {
+        ripplesInstance.drop(
+          Math.random() * w,
+          Math.random() * h,
+          60,
+          0.007
+        );
       }
-    }, isMobile ? 40 : 33);
-  }
 
+      // Continuous soft wave motion
+      const cols = 6;
+      const rows = 6;
+      let t = 0;
+
+      setInterval(() => {
+        t += 0.0003; // smooth
+
+        const w = $body.innerWidth();
+        const h = $body.innerHeight();
+
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            const x = (i + 0.5) * w / cols + Math.sin(t + i) * 8;
+            const y = (j + 0.5) * h / rows + Math.cos(t + j) * 6;
+
+            const radius = 45 + Math.sin(t + i + j) * 3;
+            const strength = 0.00001 + 0.00001 * Math.cos(t + i + j);
+
+            ripplesInstance.drop(x, y, radius, strength);
+          }
+        }
+      }, 33);
+    }
+  }
   // ======================
   // INFO PANEL TOGGLE
   // ======================
