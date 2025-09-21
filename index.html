@@ -1,36 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta
-      name="description"
-      content="Riela contemporary bath houses — a modern space for an ancient ritual."
-    />
-    <meta
-      name="keywords"
-      content="Riela, contemporary bath houses, modern space, ancient ritual, Roman thermae, Japanese onsen, Russian banya"
-    />
-    <meta name="author" content="Riela" />
-    <meta property="og:title" content="Riela - A Modern Space for an Ancient Ritual" />
-    <meta
-      property="og:description"
-      content="Inspired by Roman thermae, Japanese onsen, and Russian banya — reimagined for today's need to restore body and mind."
-    />
-    <meta property="og:image" content="/assets/og-image.jpg" />
-    <meta property="og:url" content="https://rielaspaces.com" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:creator" content="@RielaSpaces" />
-    <meta name="twitter:title" content="Riela - A Modern Space for an Ancient Ritual" />
-    <meta name="twitter:description" content="Reimagined for today's need to restore body and mind." />
-    <meta name="twitter:image" content="/assets/og-image.jpg" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Riela contemporary bath houses — a modern space for an ancient ritual." />
 
-    <title>RIELA</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" type="image/png" href="/assets/favicon1.png" />
- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  </head>
+  <title>RIELA</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="assets/favicon1.png"  />
+
+  <!-- Preload logo -->
+  <link rel="preload" as="image" href="./assets/riela-logo.png" />
+
+  <!-- Ripple effect script (vanilla, no jQuery) -->
+  <script src="jquery.ripples.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+
     <!-- jQuery first -->
     <script  src="jquery-3.2.1.min.js" defer></script>
     <!-- jQuery Ripples plugin -->
@@ -48,7 +34,7 @@
 
       <div class="overlay">
         <header class="top-row">
-        <img src="./assets/riela-logo.png" alt="Riela Logo">
+        <img rel="preload" as="image" src="./assets/riela-logo.png" alt="Riela Logo">
           <a href="https://momence.com/" target="_blank" class="book1">BOOK</a>
         </header>
 
@@ -89,7 +75,7 @@
 
         <!-- Bottom left logo -->
         <div class="footer">
-          <img src="assets/favicon.png" alt="riela icon" />
+          <img loading="lazy" src="assets/favicon.png" alt="riela icon" />
         </div>
       </div>
     </main>
