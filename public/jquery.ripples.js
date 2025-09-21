@@ -1,7 +1,8 @@
 /**
- * jQuery Ripples plugin v0.6.2 / https://github.com/sirxemic/jquery.ripples
+ * jQuery Ripples plugin v0.6.2 / patched for mobile seam fix
  * MIT License
  * @author sirxemic / https://sirxemic.com/
+ * Patched modifications by assistant: pixel-perfect canvas sizing, NEAREST background filtering, shader UV clamp.
  */
 
 (function (global, factory) {
@@ -21,12 +22,6 @@ function isPercentage(str) {
 
 /**
  *  Load a configuration of GL settings which the browser supports.
- *  For example:
- *  - not all browsers support WebGL
- *  - not all browsers support floating point textures
- *  - not all browsers support linear filtering for floating point textures
- *  - not all browsers support rendering to floating point textures
- *  - some browsers *do* support rendering to half-floating point textures instead.
  */
 function loadConfig() {
 	var canvas = document.createElement('canvas');
@@ -82,19 +77,17 @@ function loadConfig() {
 
 	if (extensions.OES_texture_half_float) {
 		configs.push(
-			// Array type should be Uint16Array, but at least on iOS that breaks. In that case we
-			// just initialize the textures with data=null, instead of data=new Uint16Array(...).
-			// This makes initialization a tad slower, but it's still negligible.
 			createConfig('half_float', extensions.OES_texture_half_float.HALF_FLOAT_OES, null)
 		);
 	}
 
-	// Setup the texture and framebuffer
+	// Setup the texture and framebuffer used for the check below
 	var texture = gl.createTexture();
 	var framebuffer = gl.createFramebuffer();
 
 	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 	gl.bindTexture(gl.TEXTURE_2D, texture);
+	// Use NEAREST here to keep consistent behaviour and avoid bleed when testing.
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -214,7 +207,7 @@ function extractUrl(value) {
 }
 
 function isDataUri(url) {
-	return url.match(/^data:/);
+	return url && url.match(/^data:/);
 }
 
 var config = loadConfig();
@@ -222,6 +215,22 @@ var transparentPixels = createImageData(3, 3);
 
 // Extend the css
 $('head').prepend('<style>.jquery-ripples { position: relative; z-index: 0; }</style>');
+
+// Utility: set canvas to device pixel ratio sized backing store to avoid subpixel seams
+function setCanvasDevicePixelSize(canvas, $el) {
+	var dpr = window.devicePixelRatio || 1;
+	// Use element inner sizes as CSS size, but backing store is scaled by dpr.
+	var cssWidth = Math.max(1, Math.round($el.innerWidth()));
+	var cssHeight = Math.max(1, Math.round($el.innerHeight()));
+	canvas.style.width = cssWidth + 'px';
+	canvas.style.height = cssHeight + 'px';
+	canvas.width = Math.max(1, Math.round(cssWidth * dpr));
+	canvas.height = Math.max(1, Math.round(cssHeight * dpr));
+	// ensure viewport uses canvas backing resolution
+	if (gl) {
+		gl.viewport(0, 0, canvas.width, canvas.height);
+	}
+}
 
 // RIPPLES CLASS DEFINITION
 // =========================
@@ -244,8 +253,15 @@ var Ripples = function (el, options) {
 
 	// Init WebGL canvas
 	var canvas = document.createElement('canvas');
-	canvas.width = this.$el.innerWidth();
-	canvas.height = this.$el.innerHeight();
+
+	// Set initial CSS size and backing store size using DPR
+	canvas.style.position = 'absolute';
+	canvas.style.left = 0;
+	canvas.style.top = 0;
+	canvas.style.right = 0;
+	canvas.style.bottom = 0;
+	canvas.style.zIndex = -1;
+
 	this.canvas = canvas;
 	this.$canvas = $(canvas);
 	this.$canvas.css({
@@ -257,13 +273,24 @@ var Ripples = function (el, options) {
 		zIndex: -1
 	});
 
+	// Append before obtaining context so sizes can be computed from DOM
 	this.$el.addClass('jquery-ripples').append(canvas);
+
+	// Get GL context from the appended canvas
 	this.context = gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+	// If GL not available, let plugin fail later (original behavior)
+	if (!gl) {
+		return;
+	}
 
 	// Load extensions
 	config.extensions.forEach(function(name) {
 		gl.getExtension(name);
 	});
+
+	// Ensure pixel-perfect backing store
+	setCanvasDevicePixelSize(this.canvas, this.$el);
 
 	// Auto-resize when window size changes.
 	$(window).on('resize', function() {
@@ -426,6 +453,11 @@ Ripples.prototype = {
 			gl.bindTexture(gl.TEXTURE_2D, that.backgroundTexture);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapping);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapping);
+
+			// IMPORTANT PATCH: force NEAREST filtering for background texture to avoid linear edge sampling
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
 			that.backgroundWidth = image.width;
@@ -473,6 +505,7 @@ Ripples.prototype = {
 	render: function() {
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+		// Use physical canvas backing resolution for viewport
 		gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
 		gl.enable(gl.BLEND);
@@ -677,6 +710,7 @@ Ripples.prototype = {
 		].join('\n'));
 		gl.uniform2fv(this.updateProgram.locations.delta, this.textureDelta);
 
+		// NOTE: patched render shader — clamp UVs to avoid edge sample bleed
 		this.renderProgram = createProgram([
 			'precision highp float;',
 
@@ -711,7 +745,10 @@ Ripples.prototype = {
 				'vec3 dy = vec3(0.0, heightY - height, delta.y);',
 				'vec2 offset = -normalize(cross(dy, dx)).xz;',
 				'float specular = pow(max(0.0, dot(offset, normalize(vec2(-0.6, 1.0)))), 4.0);',
-				'gl_FragColor = texture2D(samplerBackground, backgroundCoord + offset * perturbance) + specular;',
+				// clamp UV slightly away from edges to avoid linear sampling bleed on mobile GPUs
+				'vec2 uv = backgroundCoord + offset * perturbance;',
+				'uv = clamp(uv, vec2(0.001, 0.001), vec2(0.999, 0.999));',
+				'gl_FragColor = texture2D(samplerBackground, uv) + specular;',
 			'}'
 		].join('\n'));
 		gl.uniform2fv(this.renderProgram.locations.delta, this.textureDelta);
@@ -721,8 +758,10 @@ Ripples.prototype = {
 		this.backgroundTexture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, this.backgroundTexture);
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+		// PATCH: force NEAREST for initial background texture parameters to avoid linear edge bleed.
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 	},
 
 	setTransparentTexture: function() {
@@ -797,13 +836,8 @@ Ripples.prototype = {
 	},
 
 	updateSize: function() {
-		var newWidth = this.$el.innerWidth(),
-				newHeight = this.$el.innerHeight();
-
-		if (newWidth != this.canvas.width || newHeight != this.canvas.height) {
-			this.canvas.width = newWidth;
-			this.canvas.height = newHeight;
-		}
+		// set canvas backing store size using devicePixelRatio for pixel-perfect behaviour
+		setCanvasDevicePixelSize(this.canvas, this.$el);
 	},
 
 	destroy: function() {
