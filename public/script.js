@@ -26,6 +26,28 @@ jQuery(document).ready(function ($) {
       window.devicePixelRatio > 3 ||
       navigator.hardwareConcurrency <= 4);
 
+  // --- Performance monitoring for mobile optimization ---
+  const performanceMonitor = {
+    frameCount: 0,
+    lastTime: performance.now(),
+    fps: 60,
+    
+    update() {
+      this.frameCount++;
+      const now = performance.now();
+      if (now - this.lastTime >= 1000) {
+        this.fps = Math.round((this.frameCount * 1000) / (now - this.lastTime));
+        this.frameCount = 0;
+        this.lastTime = now;
+        
+        // Auto-adjust quality based on performance
+        if (isMobile && this.fps < 30) {
+          console.log(`📱 Low FPS detected: ${this.fps}, consider reducing quality`);
+        }
+      }
+    }
+  };
+
   // ---- CSS shimmer fallback ----
   const enableShimmer = () => {
     $("body").addClass("shimmer-fallback");
@@ -47,12 +69,24 @@ jQuery(document).ready(function ($) {
 
   // ---- WebGL Ripple Activation ----
   const enableRipples = () => {
-    $body.ripples({
-      resolution: isMobile ? 256 : 412,
-      dropRadius: isMobile ? 25 : 40,
-      perturbance: isMobile ? 0.025 : 0.03,
-      interactive: true
-    });
+    // Optimized settings for mobile - higher resolution, better performance
+    const mobileSettings = {
+      resolution: 512, // Higher resolution for crisp mobile experience
+      dropRadius: 35,  // Slightly larger for better touch response
+      perturbance: 0.04, // Increased for more visible effect
+      interactive: true,
+      crossOrigin: 'anonymous'
+    };
+
+    const desktopSettings = {
+      resolution: 512,
+      dropRadius: 40,
+      perturbance: 0.03,
+      interactive: true,
+      crossOrigin: 'anonymous'
+    };
+
+    $body.ripples(isMobile ? mobileSettings : desktopSettings);
 
     const ripplesInstance = $body.data("ripples");
     if (!ripplesInstance) return;
@@ -60,46 +94,124 @@ jQuery(document).ready(function ($) {
     const w = $body.innerWidth();
     const h = $body.innerHeight();
 
-    // Initial distributed gentle ripples
-    for (let i = 0; i < (isMobile ? 6 : 12); i++) {
-      ripplesInstance.drop(Math.random() * w, Math.random() * h, 45, 0.007);
+    // Initial distributed gentle ripples - fewer on mobile for performance
+    const initialRipples = isMobile ? 4 : 8;
+    for (let i = 0; i < initialRipples; i++) {
+      ripplesInstance.drop(Math.random() * w, Math.random() * h, 45, 0.005);
     }
 
     // --- Continuous Perpetual Ripples ---
-    // No fade-out, never stops, always a living water surface
     let t = 0;
-    const cols = 6, rows = 6;
-    const baseInterval = isMobile ? 120 : 90;
+    const cols = isMobile ? 4 : 6; // Fewer columns on mobile
+    const rows = isMobile ? 4 : 6; // Fewer rows on mobile
+    const baseInterval = isMobile ? 150 : 90; // Slower on mobile for performance
 
     setInterval(() => {
-      t += 0.01;
+      // Update performance monitoring
+      if (isMobile) {
+        performanceMonitor.update();
+      }
+      
+      t += 0.008; // Slightly slower animation on mobile
       const w = $body.innerWidth();
       const h = $body.innerHeight();
 
-      // Perpetual ripple pattern — low amplitude, constant evolution
+      // Perpetual ripple pattern — optimized for mobile
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const offset = Math.sin(t * 0.5 + i * 0.8 + j * 0.6);
-          const x = ((i + 0.5) * w) / cols + Math.sin(t + i) * 20;
-          const y = ((j + 0.5) * h) / rows + Math.cos(t + j) * 20;
-          const radius = 40 + 5 * Math.sin(t + i + j);
-          const strength = 0.001 + 0.0005 * offset;
+          const offset = Math.sin(t * 0.4 + i * 0.6 + j * 0.5);
+          const x = ((i + 0.5) * w) / cols + Math.sin(t + i) * 15;
+          const y = ((j + 0.5) * h) / rows + Math.cos(t + j) * 15;
+          const radius = 35 + 3 * Math.sin(t + i + j);
+          const strength = 0.0008 + 0.0003 * offset;
           ripplesInstance.drop(x, y, radius, strength);
         }
       }
     }, baseInterval);
 
-    // --- Gentle touch interactions on mobile ---
+    // --- Enhanced Mobile Touch Interactions ---
     if (isMobile) {
-      let lastTouch = 0;
-      $body.on("touchstart touchmove", function (e) {
+      let touchStartTime = 0;
+      let touchMoveCount = 0;
+      let lastTouchX = 0;
+      let lastTouchY = 0;
+      
+      // Optimized touch handling with requestAnimationFrame
+      let touchAnimationFrame = null;
+      
+      const handleTouch = (e) => {
+        e.preventDefault();
+        
         const now = Date.now();
-        if (now - lastTouch < 300) return;
-        lastTouch = now;
-
         const touches = e.originalEvent.touches || [];
-        for (let t of touches) {
-          ripplesInstance.drop(t.pageX, t.pageY, 30, 0.03);
+        
+        // Throttle touch events for performance
+        if (now - touchStartTime < 50) return;
+        touchStartTime = now;
+        
+        // Cancel previous animation frame
+        if (touchAnimationFrame) {
+          cancelAnimationFrame(touchAnimationFrame);
+        }
+        
+        // Use requestAnimationFrame for smooth touch response
+        touchAnimationFrame = requestAnimationFrame(() => {
+          for (let touch of touches) {
+            const x = touch.pageX;
+            const y = touch.pageY;
+            
+            // Calculate movement for dynamic ripple strength
+            const deltaX = Math.abs(x - lastTouchX);
+            const deltaY = Math.abs(y - lastTouchY);
+            const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            // Dynamic ripple based on touch movement
+            let radius = 25;
+            let strength = 0.02;
+            
+            if (movement > 10) {
+              // Fast movement = larger, stronger ripple
+              radius = 40;
+              strength = 0.04;
+            } else if (movement > 5) {
+              // Medium movement = medium ripple
+              radius = 32;
+              strength = 0.03;
+            }
+            
+            // Create ripple with optimized settings
+            ripplesInstance.drop(x, y, radius, strength);
+            
+            lastTouchX = x;
+            lastTouchY = y;
+          }
+        });
+      };
+
+      // Enhanced touch event handling
+      $body.on("touchstart", function(e) {
+        touchMoveCount = 0;
+        const touches = e.originalEvent.touches || [];
+        if (touches.length > 0) {
+          lastTouchX = touches[0].pageX;
+          lastTouchY = touches[0].pageY;
+        }
+        handleTouch(e);
+      });
+
+      $body.on("touchmove", function(e) {
+        touchMoveCount++;
+        // Only process every 3rd touchmove for performance
+        if (touchMoveCount % 3 === 0) {
+          handleTouch(e);
+        }
+      });
+
+      // Add touch end for cleanup
+      $body.on("touchend", function() {
+        if (touchAnimationFrame) {
+          cancelAnimationFrame(touchAnimationFrame);
+          touchAnimationFrame = null;
         }
       });
     }

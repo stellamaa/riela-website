@@ -37,6 +37,11 @@ canvas {
   height: 100vh;
   z-index: 1;
   opacity: 1;
+  /* Mobile optimizations */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  will-change: transform;
+  transform: translateZ(0); /* Force hardware acceleration */
 }
 .mobile {
   display: none;
@@ -247,6 +252,24 @@ a:hover {
   body {
     overflow-y: hidden;
     background-image: url(/assets/bg4rotated.jpg);
+    /* Mobile performance optimizations */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Enhanced mobile canvas performance */
+  canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 
   .mobile {
