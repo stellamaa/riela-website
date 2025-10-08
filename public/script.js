@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
     const baseInterval = isMobile ? 120 : 90;
 
     setInterval(() => {
-      t += 0.02;
+      t += 0.01;
       const w = $body.innerWidth();
       const h = $body.innerHeight();
 
@@ -124,50 +124,39 @@ jQuery(document).ready(function ($) {
   const $close = $("#closeModal");
   const $appointments = $("#appointments");
 
-  $("#openBooking").on("click", async function (e) {
+  $("#openBooking").on("click", function (e) {
     e.preventDefault();
     $modal.fadeIn();
 
-    $appointments.html("<p>Loading appointments...</p>");
+    // Date-agnostic choices that open Momence in a new tab
+    const hostId = 89357;
+    const serviceGeneral = 94346; // Riela Session
+    const serviceWomen = 94520; // Women only (4-5pm)
 
-    try {
-      const res = await fetch("/api/events");
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
+    const generalUrl = `https://momence.com/appointments/89357`;
+    const womenUrl = `https://momence.com/appointments/89357`;
 
-      if (!data || data.length === 0) {
-        $appointments.html("<p>No upcoming appointments found.</p>");
-        return;
-      }
+    $appointments.html(`
+      <div class="appointment">
+        <div>
+          <strong>Riela Session</strong><br>
+          <span>60 min · €38</span>
+        </div>
+        <a href="${generalUrl}" target="_blank" rel="noopener noreferrer">
+          <button>Book on Momence</button>
+        </a>
+      </div>
 
-      $appointments.html("");
-      data.forEach((appt) => {
-        const date = new Date(appt.start).toLocaleString("en-GB", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-
-        const item = $(`
-          <div class="appointment">
-            <div>
-              <strong>${appt.title}</strong><br>
-              <span>${date} (${appt.duration} min)</span><br>
-              <span>${appt.price ? appt.price + " " + appt.currency : ""}</span>
-            </div>
-            <a href="${appt.booking_url}" target="_blank">
-              <button>Book</button>
-            </a>
-          </div>
-        `);
-        $appointments.append(item);
-      });
-    } catch (err) {
-      console.error(err);
-      $appointments.html("<p>Error loading appointments.</p>");
-    }
+      <div class="appointment">
+        <div>
+          <strong>Women only (4-5pm)</strong><br>
+          <span>60 min · €38</span>
+        </div>
+        <a href="${womenUrl}" target="_blank" rel="noopener noreferrer">
+          <button>Book on Momence</button>
+        </a>
+      </div>
+    `);
   });
 
   $close.on("click", () => $modal.fadeOut());

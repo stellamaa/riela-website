@@ -1,5 +1,6 @@
+// server.js
 import express from "express";
-import fetch from "node-fetch"; // global in Node >=18
+import fetch from "node-fetch";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -9,93 +10,85 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
-const HOST_ID = process.env.MOMENCE_HOST_ID; // e.g. 89357
 const CLIENT_ID = process.env.MOMENCE_CLIENT_ID;
 const CLIENT_SECRET = process.env.MOMENCE_CLIENT_SECRET;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:4000";
+const PORT = process.env.PORT || 4000;
 
-if (!HOST_ID || !CLIENT_ID || !CLIENT_SECRET) {
-  console.error("❌ Missing MOMENCE_HOST_ID, CLIENT_ID, or CLIENT_SECRET in .env");
+if (!CLIENT_ID || !CLIENT_SECRET) {
+  console.error("❌ Missing CLIENT_ID or CLIENT_SECRET in .env");
   process.exit(1);
 }
 
 const app = express();
 app.use(helmet());
 app.use(cors({ origin: ALLOWED_ORIGIN }));
+app.use(rateLimit({ windowMs: 60 * 1000, max: 60 }));
 
-// === Rate limiting ===
-app.use(
-  rateLimit({
-    windowMs: 60 * 1000,
-    max: 60,
-  })
-);
-
-// ===== TOKEN CACHE =====
+// ===== Access Token Cache =====
 let tokenCache = { token: null, expiresAt: 0 };
 
 async function getAccessToken() {
   const now = Date.now();
-  if (tokenCache.token && now < tokenCache.expiresAt) {
-    return tokenCache.token;
-  }
+  if (tokenCache.token && now < tokenCache.expiresAt) return tokenCache.token;
 
   const res = await fetch("https://api.momence.com/api/v2/auth/token", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      grant_type: "client_credentials",
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+headers: {
+      'Authorization': `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      grant_type: "password",
+      username: "stellamathioudakisart@gmail.com",
+      password: "Knwssos1",
     }),
   });
 
-  if (!res.ok) throw new Error(`❌ Failed to fetch token: ${res.status}`);
-
   const data = await res.json();
+  if (!res.ok) throw new Error(`Failed to fetch access token: ${res.status}`);
+
   tokenCache.token = data.access_token;
-  tokenCache.expiresAt = now + (data.expires_in * 1000 - 5000); // buffer
-  console.log("✅ New token fetched");
+  tokenCache.expiresAt = now + (data.expires_in * 1000 - 5000);
+  console.log("✅ Got new access token");
   return tokenCache.token;
 }
 
-// ===== CACHE APPOINTMENTS =====
-let cache = { ts: 0, data: null };
-const CACHE_TTL_SECONDS = 30;
-
+// ===== Fetch Appointments =====
 async function fetchMomenceAppointments() {
   const token = await getAccessToken();
+  const hostId = process.env.MOMENCE_HOST_ID;
+  const url = `https://api.momence.com/plugin/appointment-boards/63782/services`;
 
-  const res = await fetch(
-    `https://api.momence.com/api/v2/hosts/${HOST_ID}/event-instances?upcomingOnly=true`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  console.log("📡 Fetching Momence services from:", url);
 
-  if (!res.ok) throw new Error(`Momence fetch failed: ${res.status}`);
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-  const data = await res.json();
+  const text = await res.text();
+  console.log("🔍 Momence response:", text);  // 👈 add this
+  if (!res.ok) throw new Error(`Momence fetch failed: ${res.status} - ${text}`);
 
-  // Normalize structure for frontend
-  return data.data.map((inst) => ({
-    id: inst.id,
-    title: inst.event?.title || "Session",
-    duration: inst.event?.duration,
-    price: inst.event?.price?.amount,
-    currency: inst.event?.price?.currency,
-    start: inst.start_date,
-    booking_url: inst.booking_url,
+  const data = JSON.parse(text);
+  console.log("✅ Fetched", data?.length || 0, "appointments");
+  return data.map((service) => ({
+    id: service.id,
+    title: service.appointmentService?.name || "Session",
+    duration: service.appointmentService?.minDurationInMinutes || null,
+    price: service.appointmentService?.priceInCurrency || null,
+    currency: "EUR",
+    start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow as placeholder
+    booking_url: `https://momence.com/${hostId}/booking/${service.appointmentServiceId}`,
   }));
 }
 
-// GET /api/events
+
+// ===== API route =====
 app.get("/api/events", async (req, res) => {
   try {
-    const now = Math.floor(Date.now() / 1000);
-    if (cache.data && now - cache.ts < CACHE_TTL_SECONDS) {
-      return res.json(cache.data);
-    }
     const data = await fetchMomenceAppointments();
-    cache = { ts: now, data };
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -103,12 +96,11 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
-// ===== STATIC FRONTEND =====
+// ===== Serve static frontend =====
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = process.env.PORT || 4000;
 app.listen(PORT, () =>
-  console.log(`✅ Server listening at http://localhost:${PORT}`)
+  console.log(`✅ Server running at http://localhost:${PORT}`)
 );
