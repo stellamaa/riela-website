@@ -4,7 +4,7 @@
 // =============================
 jQuery(document).ready(function ($) {
   const $body = $("body");
-  const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ('ontouchstart' in window);
 
   // --- Detect WebGL capability ---
   const canHandleWebGL = (() => {
@@ -69,11 +69,11 @@ jQuery(document).ready(function ($) {
 
   // ---- WebGL Ripple Activation ----
   const enableRipples = () => {
-    // Optimized settings for mobile - higher resolution, better performance
+    // Optimized settings for mobile - ensure proper touch response
     const mobileSettings = {
-      resolution: 512, // Higher resolution for crisp mobile experience
-      dropRadius: 35,  // Slightly larger for better touch response
-      perturbance: 0.04, // Increased for more visible effect
+      resolution: 256, // Lower resolution for better mobile performance
+      dropRadius: 20,  // Smaller radius for mobile
+      perturbance: 0.05, // Higher perturbance for more visible effect
       interactive: true,
       crossOrigin: 'anonymous'
     };
@@ -131,91 +131,33 @@ jQuery(document).ready(function ($) {
 
     // --- Enhanced Mobile Touch Interactions ---
     if (isMobile) {
-      let touchStartTime = 0;
-      let touchMoveCount = 0;
-      let lastTouchX = 0;
-      let lastTouchY = 0;
+      let lastTouchTime = 0;
       
-      // Optimized touch handling with requestAnimationFrame
-      let touchAnimationFrame = null;
-      
-      const handleTouch = (e) => {
-        e.preventDefault();
-        
+      // Simple, reliable touch handling for mobile
+      $body.on("touchstart touchmove", function(e) {
         const now = Date.now();
+        // Throttle to prevent too many ripples
+        if (now - lastTouchTime < 100) return;
+        lastTouchTime = now;
+        
         const touches = e.originalEvent.touches || [];
-        
-        // Throttle touch events for performance
-        if (now - touchStartTime < 50) return;
-        touchStartTime = now;
-        
-        // Cancel previous animation frame
-        if (touchAnimationFrame) {
-          cancelAnimationFrame(touchAnimationFrame);
-        }
-        
-        // Use requestAnimationFrame for smooth touch response
-        touchAnimationFrame = requestAnimationFrame(() => {
-          for (let touch of touches) {
-            const x = touch.pageX;
-            const y = touch.pageY;
-            
-            // Calculate movement for dynamic ripple strength
-            const deltaX = Math.abs(x - lastTouchX);
-            const deltaY = Math.abs(y - lastTouchY);
-            const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            
-            // Dynamic ripple based on touch movement
-            let radius = 25;
-            let strength = 0.02;
-            
-            if (movement > 10) {
-              // Fast movement = larger, stronger ripple
-              radius = 40;
-              strength = 0.04;
-            } else if (movement > 5) {
-              // Medium movement = medium ripple
-              radius = 32;
-              strength = 0.03;
-            }
-            
-            // Create ripple with optimized settings
-            ripplesInstance.drop(x, y, radius, strength);
-            
-            lastTouchX = x;
-            lastTouchY = y;
-          }
-        });
-      };
-
-      // Enhanced touch event handling
-      $body.on("touchstart", function(e) {
-        touchMoveCount = 0;
-        const touches = e.originalEvent.touches || [];
-        if (touches.length > 0) {
-          lastTouchX = touches[0].pageX;
-          lastTouchY = touches[0].pageY;
-        }
-        handleTouch(e);
-      });
-
-      $body.on("touchmove", function(e) {
-        touchMoveCount++;
-        // Only process every 3rd touchmove for performance
-        if (touchMoveCount % 3 === 0) {
-          handleTouch(e);
-        }
-      });
-
-      // Add touch end for cleanup
-      $body.on("touchend", function() {
-        if (touchAnimationFrame) {
-          cancelAnimationFrame(touchAnimationFrame);
-          touchAnimationFrame = null;
+        for (let touch of touches) {
+          const x = touch.pageX;
+          const y = touch.pageY;
+          
+          // Create visible ripple on touch
+          ripplesInstance.drop(x, y, 30, 0.06);
         }
       });
     }
   };
+
+  // ---- Debug Info ----
+  console.log("📱 Mobile detected:", isMobile);
+  console.log("🖥️ WebGL available:", canHandleWebGL);
+  console.log("🔧 Low-end device:", isLowEnd);
+  console.log("📏 Screen width:", window.innerWidth);
+  console.log("👆 Touch support:", 'ontouchstart' in window);
 
   // ---- Decide Which Mode to Use ----
   if (isLowEnd) {
