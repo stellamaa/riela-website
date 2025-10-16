@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Favicon
+Allow: /favicon.ico
+Allow: /favicon1.png
+
+# Sitemap
+Sitemap: https://riela.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

@@ -6,19 +6,26 @@
   <meta name="description" content="Riela contemporary bath houses — a modern space for an ancient ritual." />
   <title>RIELA</title>
   <link rel="stylesheet" href="/styles.css" />
-  <link rel="icon" type="image/png" href="/assets/favicon1.png" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon1.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon1.png" />
+  <link rel="apple-touch-icon" href="assets/favicon1.png" />
 
-  <!-- jQuery + Ripples -->
+  <!-- jQuery + Ripples with lazy loading -->
   <script src="/jquery-3.2.1.min.js" defer></script>
   <script src="/jquery.ripples.js" defer></script>
   <script src="/script.js" defer></script>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/assets/bg4.jpg" as="image">
+  <link rel="preload" href="/assets/rielalogo.png" as="image">
 </head>
 <body>
   <main>
     <div id="gl" class="gl-canvas" aria-hidden="true"></div>
     <div class="overlay">
       <header class="top-row">
-        <img src="/assets/riela-logo.png" alt="Riela Logo">
+        <img src="/assets/rielalogo.png" alt="Riela Logo">
         <a href="#" class="book1" id="openBooking">BOOK</a>
       </header>
 
@@ -29,18 +36,18 @@
       <div class="info-panel" id="infoPanel">
         <p class="definition">
           <strong>Riela</strong>
-          <span class="phonetic">[ree-EH-lah]</span> — from Spanish
-          <em>rielar</em>, <br class="mobile"> verb meaning "to shimmer" or 
-          <br class="desktop"> "gleam faintly," derived from Latin 
-          <em>regillare</em> (uncertain origin); 
-          used poetically in Spanish.
+          <span class="phonetic">[ree-EH-lah]</span> <br class="mobile"> from Spanish
+          <em>rielar</em>, "to shimmer"; <br class="mobile">
+          <br class="desktop"> the reflection of moonlight on the sea.
         </p>
+
+        
 
         <div class="lead">
           <p>
            <div class="modern"><p>A modern space for an ancient ritual.</p></div>
-           Inspired by Roman thermae, Japanese onsen, and Russian banya — 
-           reimagined for today’s need to restore body and mind.
+           Inspired by Roman thermae, Japanese onsen <br class="mobile" > and Russian banya — <br class="desktop">
+           reimagined for today’s <br class="mobile"> need to restore body and mind.
           </p>
         </div>
 

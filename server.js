@@ -28,6 +28,10 @@ app.use(rateLimit({ windowMs: 60 * 1000, max: 60 }));
 // ===== Access Token Cache =====
 let tokenCache = { token: null, expiresAt: 0 };
 
+// ===== Appointments Cache =====
+let appointmentsCache = { data: null, expiresAt: 0 };
+const APPOINTMENTS_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 async function getAccessToken() {
   const now = Date.now();
   if (tokenCache.token && now < tokenCache.expiresAt) return tokenCache.token;
@@ -85,13 +89,35 @@ async function fetchMomenceAppointments() {
 }
 
 
-// ===== API route =====
+// ===== API route with caching =====
 app.get("/api/events", async (req, res) => {
   try {
+    const now = Date.now();
+    
+    // Return cached data if still valid
+    if (appointmentsCache.data && now < appointmentsCache.expiresAt) {
+      console.log("📦 Returning cached appointments");
+      return res.json(appointmentsCache.data);
+    }
+    
+    // Fetch fresh data
+    console.log("🔄 Fetching fresh appointments from Momence");
     const data = await fetchMomenceAppointments();
+    
+    // Cache the data
+    appointmentsCache.data = data;
+    appointmentsCache.expiresAt = now + APPOINTMENTS_CACHE_DURATION;
+    
     res.json(data);
   } catch (err) {
     console.error(err);
+    
+    // Return cached data if available, even if expired
+    if (appointmentsCache.data) {
+      console.log("⚠️ Using stale cached data due to error");
+      return res.json(appointmentsCache.data);
+    }
+    
     res.status(502).json({ error: "Unable to fetch appointments from Momence" });
   }
 });

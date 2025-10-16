@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Riela contemporary bath houses — a modern space for an ancient ritual." />
+  <title>RIELA</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon1.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon1.png" />
+  <link rel="apple-touch-icon" href="assets/favicon1.png" />
+
+  <!-- jQuery + Ripples with lazy loading -->
+  <script src="/jquery-3.2.1.min.js" defer></script>
+  <script src="/jquery.ripples.js" defer></script>
+  <script src="/script.js" defer></script>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/assets/bg4.jpg" as="image">
+  <link rel="preload" href="/assets/rielalogo.png" as="image">
+</head>
+<body>
+  <main>
+    <div id="gl" class="gl-canvas" aria-hidden="true"></div>
+    <div class="overlay">
+      <header class="top-row">
+        <img src="/assets/rielalogo.png" alt="Riela Logo">
+        <a href="#" class="book1" id="openBooking">BOOK</a>
+      </header>
+
+      <!-- Toggle Button -->
+      <div class="toggle-btn" id="toggleBtn">+</div>
+
+      <!-- Hidden/Expandable Info -->
+      <div class="info-panel" id="infoPanel">
+        <p class="definition">
+          <strong>Riela</strong>
+          <span class="phonetic">[ree-EH-lah]</span> <br class="mobile"> from Spanish
+          <em>rielar</em>, "to shimmer"; <br class="mobile">
+          <br class="desktop"> the reflection of moonlight on the sea.
+        </p>
+
+        
+
+        <div class="lead">
+          <p>
+           <div class="modern"><p>A modern space for an ancient ritual.</p></div>
+           Inspired by Roman thermae, Japanese onsen <br class="mobile" > and Russian banya — <br class="desktop">
+           reimagined for today’s need <br class="mobile"> to restore body and mind.
+          </p>
+        </div>
+
+        <div class="circuit">
+          <div class="circuit-title">CIRCUIT</div>
+          <ul>
+            <li>90 °C dry sauna</li>
+            <li>50 °C hammam</li>
+            <li>40 °C mineral hot pool</li>
+            <li>4 °C &amp; 8 °C cold plunges</li>
+            <li>Heated granite stone</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <img loading="lazy" src="/assets/favicon.png" alt="riela icon" />
+      </div>
+    </div>
+  </main>
+
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2 style="font-family:'Helvetica Neue', sans-serif;">Available Appointments</h2>
+      <div id="appointments" class="appointments-list">
+        <p>Loading appointments...</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
