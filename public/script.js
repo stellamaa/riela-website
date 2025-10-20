@@ -222,116 +222,15 @@ jQuery(document).ready(function ($) {
 });
 
   // === Booking Modal ===
-  const $modal = $("#bookingModal");
-  const $close = $("#closeModal");
-  const $appointments = $("#appointments");
+  // BOOK button now links directly to Momence - no modal needed
 
-  // Check if elements exist before binding events
-  if ($modal.length && $close.length && $appointments.length) {
-    $("#openBooking").on("click", function (e) {
-      e.preventDefault();
-      
-      // Check if info panel is currently open
-      if (infoPanel && infoPanel.classList.contains("visible")) {
-        // Info panel is open - close it and show appointments
-        infoPanel.classList.remove("visible");
-        setTimeout(() => {
-          infoPanel.style.display = "none";
-          // Toggle button stays + when appointments are shown
-          if (toggleBtn) {
-            toggleBtn.textContent = "+";
-          }
-          // Now show appointments modal
-          $modal.css("display", "flex");
-          setTimeout(() => $modal.addClass("show"), 10);
-        }, 400);
-      } else {
-        // Info panel is not open - just show appointments
-        $modal.css("display", "flex");
-        setTimeout(() => $modal.addClass("show"), 10);
-        // Toggle button stays + when appointments are shown
-        if (toggleBtn) {
-          toggleBtn.textContent = "+";
-        }
-      }
-
-    // Date-agnostic choices that open Momence in a new tab
-    const hostId = 89357;
-    const serviceGeneral = 94346; // Riela Session
-    const serviceWomen = 94520; // Women only (4-5pm)
-
-    const generalUrl = `https://momence.com/appointments/89357`;
-    const womenUrl = `https://momence.com/appointments/89357`;
-
-    $appointments.html(`
-      <div class="appointment">
-        <div>
-          <strong>Riela Session</strong><br>
-          <span>60 min · €38</span>
-        </div>
-        <a href="${generalUrl}" target="_blank" rel="noopener noreferrer">
-          <button>Book</button>
-        </a>
-      </div>
-
-      <div class="appointment">
-        <div>
-          <strong>Women only (4-5pm)</strong><br>
-          <span>60 min · €38</span>
-        </div>
-        <a href="${womenUrl}" target="_blank" rel="noopener noreferrer">
-          <button>Book</button>
-        </a>
-      </div>
-    `);
-  });
-
-    $close.on("click", () => {
-      $modal.removeClass("show");
-      setTimeout(() => {
-        $modal.css("display", "none");
-        // Reset toggle button state
-        if (toggleBtn) {
-          toggleBtn.textContent = "+";
-        }
-      }, 300);
-    });
-    
-    $(window).on("click", (e) => {
-      if ($(e.target).is($modal)) {
-        $modal.removeClass("show");
-        setTimeout(() => {
-          $modal.css("display", "none");
-          // Reset toggle button state
-          if (toggleBtn) {
-            toggleBtn.textContent = "+";
-          }
-        }, 300);
-      }
-    });
-  }
-
-  // === Enhanced Toggle Behavior - Switch between Info Panel and Appointments ===
+  // === Toggle Button - Simple Info Panel Toggle ===
   const toggleBtn = document.getElementById("toggleBtn");
   const infoPanel = document.getElementById("infoPanel");
-  const bookButton = document.getElementById("openBooking");
 
   if (toggleBtn && infoPanel) {
     toggleBtn.addEventListener("click", () => {
-      // Check if appointments modal is currently open
-      if ($modal.hasClass("show")) {
-        // Appointments are open - close them and show info panel
-        $modal.removeClass("show");
-        setTimeout(() => {
-          $modal.css("display", "none");
-          // Now show info panel
-          infoPanel.style.display = "flex";
-          setTimeout(() => {
-            infoPanel.classList.add("visible");
-          }, 10);
-          toggleBtn.textContent = "−";
-        }, 300);
-      } else if (infoPanel.classList.contains("visible")) {
+      if (infoPanel.classList.contains("visible")) {
         // Info panel is open - close it
         infoPanel.classList.remove("visible");
         setTimeout(() => {
@@ -347,4 +246,4 @@ jQuery(document).ready(function ($) {
         toggleBtn.textContent = "−";
       }
     });
-  };
+  }

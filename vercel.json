@@ -2,28 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "public/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ],
-  "env": {
-    "MOMENCE_CLIENT_ID": "@momence_client_id",
-    "MOMENCE_CLIENT_SECRET": "@momence_client_secret",
-    "MOMENCE_HOST_ID": "@momence_host_id",
-    "ALLOWED_ORIGIN": "@allowed_origin"
-  }
+  ]
 }
