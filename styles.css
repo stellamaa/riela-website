@@ -380,7 +380,7 @@ em {
 
   body {
     overflow: hidden;
-    background-image: url(/assets/concrete5copy.jpg);
+    background-image: url(assets/concrete5copy.jpg);
     /* Mobile performance optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
