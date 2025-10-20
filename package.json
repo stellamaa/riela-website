@@ -2,11 +2,11 @@
   "name": "riela-website",
   "version": "1.0.0",
   "description": "Riela contemporary bath houses website - Static Frontend",
-  "main": "public/index.html",
+  "main": "index.html",
   "scripts": {
     "build": "echo 'Static site - no build needed'",
-    "start": "echo 'Static site - serve from public directory'",
-    "dev": "echo 'Static site - serve from public directory'"
+    "start": "echo 'Static site - serve from root directory'",
+    "dev": "echo 'Static site - serve from root directory'"
   },
   "type": "module",
   "dependencies": {},
