@@ -266,7 +266,7 @@ jQuery(document).ready(function ($) {
     $appointments.html(`
       <div class="appointment">
         <div>
-          <strong>Riela Session</strong><br>
+          <strong>General admission</strong><br>
           <span>60 min · €38</span>
         </div>
         <a href="${generalUrl}" target="_blank" rel="noopener noreferrer">
