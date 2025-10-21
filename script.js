@@ -266,7 +266,7 @@ jQuery(document).ready(function ($) {
     $appointments.html(`
       <div class="appointment">
         <div>
-          <strong>General admission</strong><br>
+          <span>General admission</span><br>
           <span>60 min · €38</span>
         </div>
         <a href="${generalUrl}" target="_blank" rel="noopener noreferrer">
@@ -276,7 +276,7 @@ jQuery(document).ready(function ($) {
 
       <div class="appointment">
         <div>
-          <strong>Women only (4-5pm)</strong><br>
+          <span>Women only (4-5pm)</span><br>
           <span>60 min · €38</span>
         </div>
         <a href="${womenUrl}" target="_blank" rel="noopener noreferrer">
